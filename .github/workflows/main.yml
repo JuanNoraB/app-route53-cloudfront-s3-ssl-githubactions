@@ -35,3 +35,6 @@ jobs:
 
      - name: Deploy static site to S3 bucket
        run: aws s3 sync ./build s3://blue--www.blog.jamoroso.com
+     
+     - name: Invalidate CloudFront cache
+       run: aws cloudfront create-invalidation --distribution-id E1XZQXQZQXQZQ --paths "/*"
