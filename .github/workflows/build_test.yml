@@ -1,4 +1,4 @@
-name: Upload Website pipeline
+name: Upload Website pipeline build_test
 
 on:
  push:
@@ -6,7 +6,7 @@ on:
      - main
 
 jobs:
- Deploy:
+ build_and_test:
    runs-on: ubuntu-latest
    steps:
      - name: Checkout
@@ -26,14 +26,10 @@ jobs:
      - name: Build static file
        run: npm run build
 
-     - name: Configure AWS Credentials
-       uses: aws-actions/configure-aws-credentials@v1
+     - name: Upload and build artifact
+       uses: actions/upload-artifact@v2
        with:
-         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-         aws-region: us-east-1
+        name: build
+        path: build     
 
-     - name: Deploy static site to S3 bucket
-       run: aws s3 sync ./build s3://blue--www.blog.jamoroso.com
-     
 
