@@ -42,8 +42,34 @@ jobs:
     env:
       AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD: E2OLQ8QC9NXQ5A
       AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE: E1QION2DS4X756
+      S3_BUCKET_NAME: blue--www.blog.jamoroso.com
+      URL_CLOUDFRONT_DISTRIBUTION_BLUE: d20q63b5qdls42.cloudfront.net
+      URL_CLOUDFRONT_DISTRIBUTION_GREEN: d16zfwcljh2bmo.cloudfront.net
+      VALUE_DNS_RECORD: d20q63b5qdls42.cloudfront.net
 
     steps:
+      - name: Get current Route 53 record value
+        run: |
+          RECORD_VALUE=$(aws route53 list-resource-record-sets --hosted-zone-id Z0308801UI1T6XDOPWTE --query "ResourceRecordSets[?Name=='green.blog.jamoroso.com.']|[0].ResourceRecords[0].Value" --output text)
+          echo "RECORD_VALUE=$RECORD_VALUE" >> $GITHUB_ENV
+
+
+      - name: Set target S3 bucket, CloudFront distribution IDs and url cloudfront distribution
+        run: |
+          if [[ ${{ env.RECORD_VALUE }} == "d20q63b5qdls42.cloudfront.net" ]]; then
+            echo "S3_BUCKET_NAME=green-www.blog.jamoroso.com" >> $GITHUB_ENV
+            echo "AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE=E2OLQ8QC9NXQ5A" >> $GITHUB_ENV
+            echo "AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD=E1QION2DS4X756" >> $GITHUB_ENV
+            echo "VALUE_DNS_RECORD=d16zfwcljh2bmo.cloudfront.net" >> $GITHUB_ENV
+
+          else
+            echo "S3_BUCKET_NAME=blue--www.blog.jamoroso.com" >> $GITHUB_ENV
+            echo "AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE=E1QION2DS4X756" >> $GITHUB_ENV
+            echo "AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD=E2OLQ8QC9NXQ5A" >> $GITHUB_ENV
+            echo "VALUE_DNS_RECORD=d20q63b5qdls42.cloudfront.net" >> $GITHUB_ENV
+          fi
+
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -64,13 +90,17 @@ jobs:
          aws-region: us-east-1
 
       - name: Deploy static site to S3 bucket
-        run: aws s3 sync ./build s3://blue--www.blog.jamoroso.com
+        run: aws s3 sync ./build s3://${{ env.S3_BUCKET_NAME }} 
       
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} --paths "/*"
 
+      - name: update the value(url cloudfront) in DNS record json file
+        run: jq '.Changes[0].ResourceRecordSet.ResourceRecords[0].Value = "${{ env.VALUE_DNS_RECORD }}"' record_route53/dns-update.json > dns-update-modified.json
+
       - name: Update DNS record
-        run: aws route53 change-resource-record-sets --hosted-zone-id Z0308801UI1T6XDOPWTE --change-batch file://record_route53/dns-update.json
+        run: |
+          aws route53 change-resource-record-sets --hosted-zone-id Z0308801UI1T6XDOPWTE --change-batch file://dns-update-modified.json
 
       - name: Remove CNAME from CloudFront
         run: |
