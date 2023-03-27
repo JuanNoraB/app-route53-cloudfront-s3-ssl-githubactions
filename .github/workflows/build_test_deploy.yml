@@ -40,7 +40,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
 
     env:
-      AWS_CLOUDFRONT_DISTRIBUTION_ID: E2OLQ8QC9NXQ5A
+      AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD: E2OLQ8QC9NXQ5A
       AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE: E1QION2DS4X756
 
     steps:
@@ -67,7 +67,7 @@ jobs:
         run: aws s3 sync ./build s3://blue--www.blog.jamoroso.com
       
       - name: Invalidate CloudFront cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} --paths "/*"
 
       - name: Update DNS record
         run: aws route53 change-resource-record-sets --hosted-zone-id Z0308801UI1T6XDOPWTE --change-batch file://record_route53/dns-update.json
