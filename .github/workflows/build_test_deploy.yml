@@ -41,6 +41,7 @@ jobs:
 
     env:
       AWS_CLOUDFRONT_DISTRIBUTION_ID: E2OLQ8QC9NXQ5A
+      AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE: E1QION2DS4X756
 
     steps:
       - name: Checkout
@@ -51,6 +52,9 @@ jobs:
         with:
           name: build
           path: build
+
+      - name: Install jq
+        run: sudo apt-get install jq
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -67,3 +71,15 @@ jobs:
 
       - name: Update DNS record
         run: aws route53 change-resource-record-sets --hosted-zone-id Z0308801UI1T6XDOPWTE --change-batch file://record_route53/dns-update.json
+
+      - name: Remove CNAME from CloudFront
+        run: |
+          # Step 1: Retrieve the current CloudFront distribution configuration
+          aws cloudfront get-distribution-config --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE }} > distribution-config.json
+
+          # Step 2: Modify the configuration to remove the CNAME (you can use a script, or a command-line tool like jq)
+          jq '.DistributionConfig.Aliases.Items = [] | .DistributionConfig.Aliases.Quantity = 0' distribution-config.json > modified-config.json
+
+          # Step 3: Update the CloudFront distribution with the modified configuration
+          aws cloudfront update-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE }} --if-match $(jq -r '.ETag' distribution-config.json) --distribution-config file://modified-config.json
+ 
