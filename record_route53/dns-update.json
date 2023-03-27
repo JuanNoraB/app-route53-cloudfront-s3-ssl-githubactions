@@ -1,0 +1,19 @@
+{
+    "Comment": "Update the record set",
+    "Changes": [
+      {
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+          "Name": "green.blog.jamoroso.com.",
+          "Type": "CNAME",
+          "TTL": 300,
+          "ResourceRecords": [
+            {
+              "Value": "d20q63b5qdls42.cloudfront.net"
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

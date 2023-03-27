@@ -40,7 +40,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
 
     env:
-      AWS_CLOUDFRONT_DISTRIBUTION_ID: E1QION2DS4X756
+      AWS_CLOUDFRONT_DISTRIBUTION_ID: E2OLQ8QC9NXQ5A
 
     steps:
       - name: Checkout
@@ -60,7 +60,10 @@ jobs:
          aws-region: us-east-1
 
       - name: Deploy static site to S3 bucket
-        run: aws s3 sync ./build s3://green-www.blog.jamoroso.com
+        run: aws s3 sync ./build s3://blue--www.blog.jamoroso.com
       
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+
+      - name: Update DNS record
+        run: aws route53 change-resource-record-sets --hosted-zone-id your_hosted_zone_id_here --change-batch file://record_route53/dns-update.json
