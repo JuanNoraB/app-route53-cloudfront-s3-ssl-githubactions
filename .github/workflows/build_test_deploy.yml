@@ -66,4 +66,4 @@ jobs:
         run: aws cloudfront create-invalidation --distribution-id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
 
       - name: Update DNS record
-        run: aws route53 change-resource-record-sets --hosted-zone-id your_hosted_zone_id_here --change-batch file://record_route53/dns-update.json
+        run: aws route53 change-resource-record-sets --hosted-zone-id Z0308801UI1T6XDOPWTE --change-batch file://record_route53/dns-update.json
