@@ -78,7 +78,8 @@ jobs:
           aws cloudfront get-distribution-config --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE }} > distribution-config.json
 
           # Step 2: Modify the configuration to remove the CNAME (you can use a script, or a command-line tool like jq)
-          jq '.DistributionConfig.Aliases.Items = [] | .DistributionConfig.Aliases.Quantity = 0' distribution-config.json > modified-config.json
+          #jq '.DistributionConfig.Aliases.Items = [] | .DistributionConfig.Aliases.Quantity = 0' distribution-config.json > modified-config.json
+          jq '.DistributionConfig.Aliases.Items = [] | .DistributionConfig.Aliases.Quantity = 0 | .DistributionConfig' distribution-config.json > modified-config.json
 
           # Step 3: Update the CloudFront distribution with the modified configuration
           aws cloudfront update-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE }} --if-match $(jq -r '.ETag' distribution-config.json) --distribution-config file://modified-config.json
