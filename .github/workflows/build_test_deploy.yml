@@ -96,4 +96,16 @@ jobs:
               sleep 60
             fi
           done
-      
+
+      - name: Add CNAME to CloudFront
+        run: |
+          # Step 1: Retrieve the current CloudFront distribution configuration
+          aws cloudfront get-distribution-config --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} > distribution-config.json
+
+          # Step 2: Modify the configuration to add the CNAME
+          jq '.DistributionConfig.Aliases.Items = ["green.blog.jamoroso.com"] | .DistributionConfig.Aliases.Quantity = 1 | .DistributionConfig' distribution-config.json > modified-config.json
+
+          # Step 3: Update the CloudFront distribution with the modified configuration
+          aws cloudfront update-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} --if-match $(jq -r '.ETag' distribution-config.json) --distribution-config file://modified-config.json
+
+  
