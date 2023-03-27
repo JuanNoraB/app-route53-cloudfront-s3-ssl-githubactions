@@ -84,3 +84,16 @@ jobs:
           # Step 3: Update the CloudFront distribution with the modified configuration
           aws cloudfront update-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE }} --if-match $(jq -r '.ETag' distribution-config.json) --distribution-config file://modified-config.json
  
+      - name: Wait for CloudFront distribution update to complete
+        run: |
+          while true; do
+            status=$(aws cloudfront get-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE }} | jq -r '.Distribution.Status')
+            if [ "$status" == "Deployed" ]; then
+              echo "CloudFront distribution update completed"
+              break
+            else
+              echo "Waiting for CloudFront distribution update to complete..."
+              sleep 60
+            fi
+          done
+      
