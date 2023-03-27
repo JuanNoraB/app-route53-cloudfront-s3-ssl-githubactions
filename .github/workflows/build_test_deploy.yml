@@ -48,6 +48,25 @@ jobs:
       VALUE_DNS_RECORD: d20q63b5qdls42.cloudfront.net
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build
+
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         aws-region: us-east-1
+
       - name: Get current Route 53 record value
         run: |
           RECORD_VALUE=$(aws route53 list-resource-record-sets --hosted-zone-id Z0308801UI1T6XDOPWTE --query "ResourceRecordSets[?Name=='green.blog.jamoroso.com.']|[0].ResourceRecords[0].Value" --output text)
@@ -68,27 +87,7 @@ jobs:
             echo "AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD=E2OLQ8QC9NXQ5A" >> $GITHUB_ENV
             echo "VALUE_DNS_RECORD=d20q63b5qdls42.cloudfront.net" >> $GITHUB_ENV
           fi
-
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: build
-
-      - name: Install jq
-        run: sudo apt-get install jq
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-         aws-region: us-east-1
-
+      
       - name: Deploy static site to S3 bucket
         run: aws s3 sync ./build s3://${{ env.S3_BUCKET_NAME }} 
       
