@@ -72,7 +72,7 @@ jobs:
 
       - name: Get current Route 53 record value
         run: |
-          RECORD_VALUE=$(aws route53 list-resource-record-sets --hosted-zone-id ${{ env.HOSTED_ZONE_ID }} --query "ResourceRecordSets[?Name=='green.blog.jamoroso.com.']|[0].ResourceRecords[0].Value" --output text)
+          RECORD_VALUE=$(aws route53 list-resource-record-sets --hosted-zone-id ${{ env.HOSTED_ZONE_ID }} --query "ResourceRecordSets[?Name=='${{ env.DOMAIN_NAME }}.']|[0].ResourceRecords[0].Value" --output text)
           echo "RECORD_VALUE=$RECORD_VALUE" >> $GITHUB_ENV
 
 
@@ -141,7 +141,7 @@ jobs:
           aws cloudfront get-distribution-config --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} > distribution-config.json
 
           # Step 2: Modify the configuration to add the CNAME
-          jq '.DistributionConfig.Aliases.Items = ["green.blog.jamoroso.com"] | .DistributionConfig.Aliases.Quantity = 1 | .DistributionConfig' distribution-config.json > modified-config.json
+          jq '.DistributionConfig.Aliases.Items = ["{{ env.DOMAIN_NAME }}"] | .DistributionConfig.Aliases.Quantity = 1 | .DistributionConfig' distribution-config.json > modified-config.json
 
           # Step 3: Update the CloudFront distribution with the modified configuration
           aws cloudfront update-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} --if-match $(jq -r '.ETag' distribution-config.json) --distribution-config file://modified-config.json
