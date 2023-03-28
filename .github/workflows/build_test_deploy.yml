@@ -124,12 +124,12 @@ jobs:
             if [ "$status" == "Deployed" ]; then
               echo "CloudFront distribution update completed"
               break
-            elif [ $counter -ge 10 ]; then
+            elif [ $counter -ge 1 ]; then
               echo "Timed out waiting for CloudFront distribution update"
               break
             else
               echo "Waiting for CloudFront distribution update to complete..."
-              sleep 60
+              sleep 5
               counter=$((counter+1))
             fi
           done
