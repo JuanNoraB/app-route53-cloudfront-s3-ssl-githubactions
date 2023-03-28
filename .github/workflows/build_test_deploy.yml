@@ -48,6 +48,7 @@ jobs:
       HOSTED_ZONE_ID: Z0308801UI1T6XDOPWTE
       URL_CLOUDFRONT_DISTRIBUTION_BLUE: d20q63b5qdls42.cloudfront.net
       URL_CLOUDFRONT_DISTRIBUTION_GREEN: d16zfwcljh2bmo.cloudfront.net
+      DOMAIN_NAME: green.blog.jamoroso.com
 
     steps:
       - name: Checkout
