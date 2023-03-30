@@ -129,7 +129,7 @@ jobs:
               break
             else
               echo "Waiting for CloudFront distribution update to complete..."
-              sleep 5
+              sleep 1
               counter=$((counter+1))
             fi
           done
