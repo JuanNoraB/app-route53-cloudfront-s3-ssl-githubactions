@@ -1,5 +1,4 @@
-import logo from './logo.svg';
-import './App.css';
+girimport './App.css';
 import PostLayout1 from './PostLayout1.module.css';
 
 
