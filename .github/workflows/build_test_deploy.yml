@@ -118,7 +118,7 @@ jobs:
  
       - name: Wait for CloudFront distribution update to complete
         run: |
-          counter=10
+          counter=1
           while true; do
             status=$(aws cloudfront get-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE }} | jq -r '.Distribution.Status')
             if [ "$status" == "Deployed" ]; then
@@ -129,7 +129,7 @@ jobs:
               break
             else
               echo "Waiting for CloudFront distribution update to complete..."
-              sleep 60
+              sleep 1
               counter=$((counter+1))
             fi
           done
