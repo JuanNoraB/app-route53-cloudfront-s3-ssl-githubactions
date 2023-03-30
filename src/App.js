@@ -1,4 +1,4 @@
-girimport './App.css';
+import './App.css';
 import PostLayout1 from './PostLayout1.module.css';
 
 
