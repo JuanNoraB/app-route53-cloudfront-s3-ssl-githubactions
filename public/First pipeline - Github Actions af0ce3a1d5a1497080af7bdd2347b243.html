@@ -1,0 +1,702 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>First pipeline - Github Actions</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="af0ce3a1-d5a1-4970-80af-7bdd2347b243" class="page sans"><header><h1 class="page-title">First pipeline - Github Actions</h1></header><div class="page-body"><p id="cee019e0-4f56-42ad-936e-be75bac886ae" class="">
+</p><p id="c4e9978f-45c1-4537-a2c2-c1864837460f" class="">
+</p><h1 id="4e68f81d-70e9-4efc-845a-a97c61a1ff9c" class="">First pipeline </h1><p id="f146f707-5f25-4037-807e-be5a00f29859" class="">This pipeline automates the deployment of a Node.js frontend application using GitHub Actions, covering three stages: testing, building, and manual deployment. It leverages AWS S3 and CloudFront for hosting, Route 53 for DNS management, and implements blue-green deployment for seamless updates. The application is accessible through a custom domain with an SSL certificate, ensuring secure connections.</p><p id="c16c6567-6821-424e-bd99-c8a1eb9cb649" class="">
+</p><h3 id="0b350f0d-65fa-4a05-94de-e6f8db11265f" class="">Brief Description of Architecture</h3><figure id="b34e1aba-4310-40a9-9574-33f0ae44d3f4" class="image"><a href="%20First%20pipeline-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled.png"><img style="width:1371px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled.png"/></a></figure><p id="29b96207-209e-48b7-9fcc-722a111cdb2c" class="">A posible efficient method for implementing blue-green deployments is to use two CloudFront distributions and manage thier traffic  through CloudFront configurations. Due that CloudFront has  cannot assign a specific DNS alias to multiple distributions.we can assign the a specific DNS alias for example domainname.com to the green instance and no one alias to the blue instance.For the Route 53 DNS record&#x27;s,  we set with the CloudFront distribution that has the DNS alias, directing the traffic of our CloudFront to domainname.com alias. By adding the domainname.com domain from the green instance and removing the domainname.com domain of blue instance or viceverse, traffic can be switched between the blue and green distributions.</p><p id="2c140aea-a3d5-4cbd-bb8e-c2438958af41" class="">When the green site is live, deploying a blue version of the application involves 5 steps: updating the S3 bucket, invalidating the distribution cache,change the target of Route 53 DNS record&#x27;s for blue distribution, removing the domainname.com alias from the green distribution and add domainname.com alias in the blue distribution. Although configuration changes can take up to an hour to propagate fully, the site change is usually observed within a few minutes. However, this method does not support gradual releases and results in an immediate switch of all traffic from blue to green.</p><p id="7b2b73a3-c530-48ca-95c6-b46b7a1d46fe" class="">
+</p><h2 id="4aefea25-a3db-4683-856a-fc57aa0f8e1a" class="">Steps</h2><h3 id="e6173bba-3e52-426e-a008-b4b0626dca9e" class="">Step 1 </h3><h3 id="39817070-22af-47b8-8d2a-728aecf46a51" class="">Create two S3 buckets in your account in AWS</h3><p id="a88551ce-5948-4a06-b7a8-f7e567a87248" class=""><div class="indented"><ol type="1" id="44e64e5f-a907-4da3-b679-5ed227dbfd4a" class="numbered-list" start="1"><li><code><strong>blue-www.domainname.com</strong></code> - to store the content of your website with &quot;www&quot; in the blue environment.</li></ol><ol type="1" id="23a01ee5-c686-4181-b22f-19ac025e022b" class="numbered-list" start="2"><li><code><strong>reen-www.domainname.com</strong></code> - to store the content of your website with &quot;www&quot; in the green environment.</li></ol><p id="64f9ecb6-d51c-4d05-8ee3-5a396217ba5f" class="">
+</p><p id="90352778-8119-4f50-b6dd-b4578c6a3f6b" class=""><strong>Considerations to take into account:</strong><div class="indented"><ul id="0384f1fe-d206-4052-8e0a-f792099363fa" class="bulleted-list"><li style="list-style-type:disc"><strong>Region</strong>: US East (N. Virginia) us-east-1</li></ul><ul id="38911566-cf68-4a68-bb2e-b8bd405b9c7c" class="bulleted-list"><li style="list-style-type:disc"><strong><strong>Block public access: </strong></strong>disabled </li></ul><ul id="5b5af372-a719-4ac8-83b1-acd646481f5b" class="bulleted-list"><li style="list-style-type:disc"><strong>Control version:</strong> enable </li></ul></div></p><p id="92738937-4018-47f9-8d3c-766d21be29fe" class="">
+</p><p id="909bd2d0-048c-4027-a8b9-4e6a08f7e659" class="">It is a common convention and good practice to name your S3 buckets after the domain names they will use. This makes it easier to identify and organize your buckets and makes the process of setting up and managing your resources in AWS clearer.</p></div></p><p id="260399d7-8d03-41ee-af41-107008a5121b" class="">
+</p><p id="17fcebe3-63fe-4f37-ae20-37e5acb1bec6" class="">
+</p><h3 id="1a39f242-93f5-4a96-8599-4999b24c2e78" class="">Step 2</h3><h3 id="1d94ab32-6fb0-4b67-8c0d-8e6829c501c1" class="">Create the hosted zone and Set up an SSL certificate using AWS Certificate Manager (ACM) for your custom domain.</h3><ol type="1" id="1081ae3f-3530-441f-951e-2cfb64ee53b2" class="numbered-list" start="1"><li>Buy a domain and create the a Hosted zone.</li></ol><ol type="1" id="2e7bf9cf-882d-4017-8d5b-a3b3a71e6c3c" class="numbered-list" start="2"><li>go AWS Certificate Manager (ACM).</li></ol><ol type="1" id="b0e1d55d-2b72-408f-81f9-7571216e0f46" class="numbered-list" start="3"><li>Go to “Request certificate” and check the option “Request a public certificate”</li></ol><ol type="1" id="6ac7b034-b2f9-4a9c-9278-357f4693900a" class="numbered-list" start="4"><li>Dentro de <strong>Domain Name,</strong> coloca tu dominio personalizado. Ex:<ol type="a" id="c9350be5-13bb-450b-8c94-fe1b5813786e" class="numbered-list" start="1"><li>namedomain.com</li></ol><ol type="a" id="665aee5e-bcd6-4709-8b81-a3d41ab2214c" class="numbered-list" start="2"><li>*.namedomian.com</li></ol></li></ol><ol type="1" id="22e07cd7-67f7-416c-99de-850ba87bc137" class="numbered-list" start="5"><li>Valida el certificado a travez de cualquiera de los metodos sugeridos <strong>&quot;DNS validation&quot;</strong> o <strong>&quot;Email validation”</strong></li></ol><ol type="1" id="dec85ba4-0beb-4d1c-b15e-1e5884fb54d5" class="numbered-list" start="6"><li>el certificado tarde unos minutos en emitirce,hasta que el proceso de validaci[on se complete  en la consola de ACM una vez que el certificado esté emitido y su estado sera &quot;Issued”.</li></ol><p id="3afa1047-49ae-41a5-ad84-00674d46f6b5" class="">
+</p><h3 id="8e411fec-3654-4ea7-9391-c92af0cded0b" class="">Step 3</h3><h3 id="05636f20-e1a7-4275-865c-f2a36314ba00" class="">Crea dos distribuciones de CloudFront:</h3><ul id="d1c33f5f-fd8b-46f7-9edf-70ce6ab7014a" class="bulleted-list"><li style="list-style-type:disc">Una para el entorno &quot;blue&quot; que apunte al bucket &quot;blue&quot; .</li></ul><ul id="3cd26cde-1e62-4ece-bf09-46c097e9d234" class="bulleted-list"><li style="list-style-type:disc">Otra para el entorno &quot;green&quot; que apunte al bucket &quot;green&quot; .</li></ul><p id="87f63d2f-c742-4c2a-8d21-13d02dd804ed" class="">
+</p><p id="4e342cad-f730-4ea6-895b-b678815e6944" class=""><strong>Considerations to take into account:</strong><div class="indented"><ul id="99f218ec-4537-4506-846e-b0dfa82cfcfd" class="bulleted-list"><li style="list-style-type:disc">Redirect HTTP to HTTPS in <strong>Default cache behavior</strong></li></ul><ul id="b0bfd398-5474-469e-ad82-44061bc73b83" class="bulleted-list"><li style="list-style-type:disc">Use a CloudFront <strong>origin access identity (OAI) </strong>to access the corresponding S3 bucket.(update the bucket policy).</li></ul><ul id="3ceab896-d2cf-4cc6-8366-80e9b7f33924" class="bulleted-list"><li style="list-style-type:disc">Associate <strong>a certificate from AWS Certificate Manager</strong> that was previously created. The certificate must be in the US East (N. Virginia) Region (us-east-1).</li></ul><ul id="d2efbd14-87a7-4903-b649-cbf042cc6582" class="bulleted-list"><li style="list-style-type:disc">Add a Alternate domain name (CNAME),for the cloudfront that will handle the traffic of our website in the first instance.<strong>(This domain name will be used to access of our web).</strong></li></ul></div></p><p id="a74ae4ed-0f57-433a-af3d-9d01f1aec397" class="">
+</p><p id="5ca91067-5309-409c-90d1-30a8db35f140" class="">
+</p><h3 id="efe1f303-2d17-49f2-b2c3-8b3a1d7188e6" class="">Step 4</h3><h3 id="3d490cfd-4c39-4c8b-a68b-dcd581aa3ec8" class="">Create a IAM user in AWS</h3><ol type="1" id="9b6a62ce-3a20-473a-b2dd-a619d6d5eb65" class="numbered-list" start="1"><li>After creating the user, create the <strong>access keys</strong> to access our resources through our pipeline later.</li></ol><p id="ecd92b07-b198-456a-b728-fdaea1fc5d8d" class=""><strong>Considerations to take into account:</strong></p><ul id="d7a8b1f7-5812-4edf-88f7-6ed13e8a58ac" class="bulleted-list"><li style="list-style-type:disc">Once the user is created, make sure to give them policies that grant permissions to work with S3 and CloudFront and route53. For example, you could select AmazonS3FullAccess, CloudFrontFullAccess,ChangeResourceRecordSets and ListResourceRecordSet.<p id="f8c45b89-29e1-4371-bcc4-7bcc9ae3c3c9" class="">
+</p></li></ul><p id="ebaad67d-5728-4b5a-8249-a5fbca28a452" class="">
+</p><h3 id="5bc85bb8-d06e-4a0b-9057-5d41004134a8" class="">Step 5</h3><h3 id="55000585-f42c-4883-937b-c3db8fc40099" class="">Configure Route 53 to map your custom domain</h3><ol type="1" id="e19b6333-b7b8-492b-af9d-bc93bb1ee23e" class="numbered-list" start="1"><li>Configure Route 53 to map your custom domain which must be the same as the CNAME in the previous step and configure it to the corresponding CloudFront distribution.</li></ol><p id="cc693121-7a63-4688-b79a-bc74a08a043b" class=""><strong>Considerations to take into account:</strong></p><ul id="90f769ba-3a4d-4e75-b82c-922f22992444" class="bulleted-list"><li style="list-style-type:disc">Be sure to put the CNAME in Record Type and the url of the corresponding cloud front in Value.</li></ul><p id="9bc4ac2c-af96-430e-871b-9505678b3050" class="">
+</p><p id="3322cca0-189d-4a5e-85ee-002b20f9506c" class="">
+</p><p id="28084681-648a-4996-b980-85aae7bef9d9" class="">
+</p><h3 id="45cc4fde-5d0d-42a0-960d-5d6c16c968be" class="">Step 6</h3><h3 id="95c0cbf3-cca9-4ca2-b4c0-918e9ae0dc97" class=""><strong>Blue-Green Deployment using GitHub Actions</strong></h3><p id="7670dd7e-cd91-47bb-81a0-613fea3ce711" class=""><strong>Diagram</strong></p><figure id="84df8d20-b3af-477f-bec1-bc990c8df63d" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%201.png"><img style="width:336px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%201.png"/></a></figure><h3 id="0e1767f9-1220-4c0c-b555-823857fe8d51" class=""></h3><h3 id="0a8ad6c4-f6dc-417a-9ffa-1813eecb51d1" class="">Explanation:</h3><p id="93f81329-4698-44af-b08e-ed1e16a88046" class="">This pipeline is designed to perform blue-green deployment for a frontend application using GitHub Actions. It consists of two jobs: <code><strong>build_and_test</strong></code> and <code><strong>deploy</strong></code>.</p><ol type="1" id="9fe0cf0c-509c-4c2b-8d9c-700e84f9006f" class="numbered-list" start="1"><li><strong>build_and_test</strong>: This job is responsible for setting up the environment, building, and testing the application. It includes the following steps:<p id="b7804a07-a5f6-46c0-95fc-9a221b7b1b55" class="">a. Checkout the repository: Retrieves the source code from the specified branch (main).</p><p id="af1d6a18-3200-4aa2-b545-eabf0628311f" class="">b. Setup Node.js: Configures the desired Node.js version for the environment (version 14).</p><p id="deb9a8b6-3b93-4500-8062-d17f2d7ba8d4" class="">c. Install dependencies: Installs all required dependencies using <code><strong>npm install</strong></code>.</p><p id="325ee5cc-05d0-4cb1-93dc-7e96efdd0b18" class="">d. Run tests: Executes the application tests using <code><strong>npm run test</strong></code>.</p><p id="aadeb418-0436-4ae3-8509-4f7cc02002e1" class="">e. Build static files: Generates the production build of the application using <code><strong>npm run build</strong></code>.</p><p id="1265617e-755c-46da-a479-8f90cdf8d715" class="">f. Upload build artifact: Stores the build folder as an artifact for later use in the deploy job.</p></li></ol><ol type="1" id="7c148aea-4f76-4ba4-a471-b83d5e8f44d3" class="numbered-list" start="2"><li><strong>deploy</strong>: This job is responsible for deploying the application to the appropriate environment (blue or green) based on the current Route 53 record value. It is triggered only when the workflow is manually dispatched. The deploy job includes the following steps:<p id="3f296e11-9f44-4db4-aca1-745ec918742f" class="">a. Checkout the repository: Retrieves the source code from the specified branch (main).</p><p id="69d42689-2169-40bd-b1d3-2c2088047ae3" class="">b. Download build artifact: Retrieves the previously stored build artifact from the <code><strong>build_and_test</strong></code> job.</p><p id="f418a62a-fed0-44c4-98ee-d5bf493b6f84" class="">c. Install jq and configure AWS credentials: Installs the jq tool for JSON manipulation and sets up AWS credentials to interact with AWS services.</p><p id="63cbb3b8-f845-4945-bb50-c17aa1ac028a" class="">d. Get current Route 53 record value: Retrieves the value of the current DNS record to determine the active environment (blue or green).</p><p id="e2b668d7-426c-43a8-a775-46d9fd4ea992" class="">e. Set target S3 bucket, CloudFront distribution IDs, and URL of the CloudFront distribution: Configures the appropriate AWS resources based on the current record value.</p><p id="0530f4bc-330c-47fb-ab3d-08551968e8c1" class="">f. Deploy the static site to the target S3 bucket: Syncs the build folder with the target S3 bucket.</p><p id="7f83b303-6a08-40aa-b5bb-d1f5b6e701c8" class="">g. Invalidate CloudFront cache: Invalidates the cache of the target CloudFront distribution to ensure the latest files are served.</p><p id="1450ff25-a612-42ef-a2da-200150773b44" class="">h. Update DNS record: Modifies the Route 53 DNS record to point to the new target CloudFront distribution, effectively swapping the active environment.</p><p id="c6328bca-ef39-4c56-bb90-c6fd659c9bc4" class="">i. Remove CNAME from CloudFront distribution: Removes the CNAME from the previous CloudFront distribution to avoid conflicts.</p><p id="e49f030d-77fc-4209-b5ba-547f732ac604" class="">j. Wait for CloudFront distribution update to complete: Monitors the status of the distribution update with a maximum waiting time of 10 minutes.</p><p id="6a192bef-f3ed-4b88-94cb-202bee39ef3c" class="">k. Add CNAME to the new active CloudFront distribution: Adds the CNAME to the new target distribution to finalize the swap.</p></li></ol><p id="1e25ef00-0460-4b26-88db-bf7ab48a196a" class="">The blue-green deployment strategy helps reduce downtime and minimize the risk of introducing errors into the production environment by swapping between two environments (blue and green) with minimal manual intervention.</p><p id="9659666a-4dc3-4b65-8298-b4c6f7186bd8" class="">In the GitHub Actions workflow, the virtual machine running the workflow is specified by the <code><strong>runs-on: ubuntu-latest</strong></code> line. In this case, both jobs use the latest version of Ubuntu as their operating system. When the workflow runs, a new virtual machine is created based on the specified image.</p><figure id="1131939c-c0d6-4c83-bb11-c113a412e3cc"><div class="source">https://github.com/JuanNoraB/app-route53-cloudfront-s3-ssl-githubactions.git</div></figure><p id="d1211810-5bb7-4b93-b4e2-af3a82121ee2" class="">
+</p><h2 id="800a7df4-7118-41b8-a6a3-97235954c3c7" class="">Demo</h2><p id="b2aef591-a12d-43ad-a3a1-ba47c065dec1" class="">
+</p><p id="71e85068-fbd6-46d2-866e-53f3b4212d5c" class="">For example if  our app is stored in the S3 blue bucket,we can make any changes in our local repository when the app is ready for deployment, we can push to redirect our app to our green bucket with the new changes we have implemented. the push must be make from the main branch, the build_and_test will be executed automatically, where it runs tests and builds the static files, if everything is fine You can run our deploy stage manually</p><p id="5a96efc5-b645-4486-912d-55cc2b88eb0b" class="">
+</p><ul id="59551e51-1e16-43bd-8402-7f0468d389c3" class="bulleted-list"><li style="list-style-type:disc">After a push in a local machine.</li></ul><figure id="d0ca7d1e-8be7-4540-8c60-b6591da0a116" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%202.png"><img style="width:1902px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%202.png"/></a></figure><p id="1cc8ba2d-c04a-4d53-b2f3-779d0f4c47f4" class="">
+</p><ul id="14e824b4-4d19-4507-9ef6-fa79fb05d419" class="bulleted-list"><li style="list-style-type:disc">We can see the state of each step in our pipeline in we click in build_test.</li></ul><figure id="c55bcaf1-ff51-40c1-832c-224823819f0b" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%203.png"><img style="width:1902px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%203.png"/></a></figure><p id="a9ee3076-d9ee-4148-b83e-922769ccd787" class="">
+</p><ul id="a5a8f5f3-9bff-441c-ad08-25d0f140a20b" class="bulleted-list"><li style="list-style-type:disc">After the build_test stage has finished successfully, we can move on to the deploy stage. We have to go to Combined Workflow under Actions, click on it and we can see Run Workflow option, go to it and click on Run Workflow.</li></ul><figure id="4718fe77-323a-4edb-a8b8-d44cdb9e21d1" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%204.png"><img style="width:1902px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%204.png"/></a></figure><p id="7b60332c-7349-47d6-b4ac-c89483c13337" class="">
+</p><ul id="028716fa-ed5a-4a48-aa3a-d9912335578b" class="bulleted-list"><li style="list-style-type:disc">The workflow start to run:</li></ul><figure id="45b46924-8162-4819-be07-2c1451e1b3eb" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%205.png"><img style="width:1902px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%205.png"/></a></figure><p id="f822fd08-9cf2-45c7-9194-1db1e3700ab3" class="">
+</p><ul id="c406e3e0-3664-42ea-a29e-372ec1dc1d8a" class="bulleted-list"><li style="list-style-type:disc">After to finish we can enter of  our workflow and see the state.</li></ul><figure id="ca133392-beb3-4da9-8ee2-39ec4d976a16" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%206.png"><img style="width:1767px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%206.png"/></a></figure><p id="be87d4b8-33a9-4a91-a440-d44024904c94" class="">
+</p><ul id="fc242823-3e33-42d4-aaff-6f326299ca4e" class="bulleted-list"><li style="list-style-type:disc">If we go to our distribution in our AWS account, we can see that CNAME has the distribution that map of our green bucket.</li></ul><figure id="f0afee6a-4d07-4e7c-a58c-a8ef4aa00aef" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%207.png"><img style="width:1614px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%207.png"/></a></figure><ul id="9e83e5ca-8f73-414b-ad83-84ee6896f4ab" class="bulleted-list"><li style="list-style-type:disc">Also if we go to our record we can see the <a href="http://green.blog.jamoros.com">green.blog.jamoros.com</a> is map to the ID distribution corresponding ot the green bucket.</li></ul><figure id="b662564a-741b-4322-9a96-cc23f9f56e81" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%208.png"><img style="width:1911px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%208.png"/></a></figure><p id="01615eee-a802-4507-877c-8516f9d07cbe" class="">
+</p><ul id="6884d99d-07ba-46ab-b14c-cfe44b61c283" class="bulleted-list"><li style="list-style-type:disc">Finally if we go to the domain name of our app:</li></ul><figure id="4be25839-c86a-45dd-8948-41401f7601c6" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%209.png"><img style="width:1920px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%209.png"/></a></figure><p id="99621817-c4d8-462d-88cb-0c3f60be3608" class="">
+</p><p id="541ed907-5c46-4292-8fa0-1a6e88d8a965" class="">
+</p><p id="64096dd3-9f54-4072-928c-7b33e6c833a0" class="">Ithe second time That we run our pipeline we need to do the same process, but this time the app feeding with the blue bucket, and of course we use the same domain to access it, in this case green.blog.jamoroso.com</p><ul id="f2d13413-44fc-4dea-898e-b0f8bdf5150e" class="bulleted-list"><li style="list-style-type:disc">after push in the main branch</li></ul><figure id="389ed7c6-96ee-4112-b492-bcb228d6e5f9" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2010.png"><img style="width:1899px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2010.png"/></a></figure><p id="81bdfc94-3e94-4ede-9d3a-8f33ace56e66" class="">
+</p><ul id="1da9db78-851a-45f8-b1d3-3a0db44f9c34" class="bulleted-list"><li style="list-style-type:disc">Run the deploy stage</li></ul><figure id="157750bf-8f34-4d2b-9893-73ea5c6ceb26" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2011.png"><img style="width:1916px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2011.png"/></a></figure><figure id="499a6b8f-1b90-4503-80bb-c2bf07cc620b" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2012.png"><img style="width:1916px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2012.png"/></a></figure><p id="a45119c5-ddf4-4f69-b297-f2324814e36e" class="">
+</p><ul id="1bf520f4-93c0-4c4d-9f70-43639fd2c572" class="bulleted-list"><li style="list-style-type:disc">After of deploy stage we can confirm that every thing is fine in our AWS account </li></ul><figure id="e7251881-3b27-4ab0-a310-a506176e5403" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2013.png"><img style="width:1889px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2013.png"/></a></figure><figure id="f7a02174-92fc-4c47-a89a-0c32fe28392d" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2014.png"><img style="width:1911px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2014.png"/></a></figure><p id="2f1f6497-466b-4915-8889-954f6d9843e2" class="">
+</p><ul id="b5158c61-d6a2-44f5-bd63-9c929b7dd170" class="bulleted-list"><li style="list-style-type:disc">Finally if we go to the domain name of our app:</li></ul><figure id="0d681c9a-add2-4120-841c-91987753193b" class="image"><a href="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2015.png"><img style="width:1920px" src="First%20pipeline%20-%20Github%20Actions%20af0ce3a1d5a1497080af7bdd2347b243/Untitled%2015.png"/></a></figure><p id="bd887980-fd3b-4e08-9bef-339c066ceec9" class="">
+</p><p id="ed8ebe04-f701-4121-b9dc-c37c6f0c2068" class="">The blue-green deployment approach with AWS and GitHub Actions, you can achieve zero-downtime deployments, minimize risks, and easily rollback to a previous stable version if needed, all while automating the process for better efficiency.</p><p id="12b99c61-f0f9-434c-9625-32c7cee978d5" class="">
+</p></div></article></body></html>
