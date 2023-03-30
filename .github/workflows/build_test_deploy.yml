@@ -142,7 +142,7 @@ jobs:
           cat distribution-config.json
 
           # Step 2: Modify the configuration to add the CNAME
-          jq '.DistributionConfig.Aliases.Items = ["${{ env.DOMAIN_NAME }}"] | .DistributionConfig.Aliases.Quantity = 1 |' distribution-config.json > modified-config.json
+          jq '.DistributionConfig.Aliases.Items = ["${{ env.DOMAIN_NAME }}"] | .DistributionConfig.Aliases.Quantity = 1' distribution-config.json > modified-config.json
 
           # Step 3: Update the CloudFront distribution with the modified configuration in a loop
           success=false
