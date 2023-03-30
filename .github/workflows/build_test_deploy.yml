@@ -129,7 +129,7 @@ jobs:
               break
             else
               echo "Waiting for CloudFront distribution update to complete..."
-              sleep 1
+              sleep 60
               counter=$((counter+1))
             fi
           done
@@ -155,7 +155,7 @@ jobs:
               break
             else
               echo "Attempt $((counter+1)) to add CNAME failed. Retrying in 1 second..."
-              sleep 1
+              sleep 3
               counter=$((counter+1))
             fi
           done
