@@ -118,7 +118,7 @@ jobs:
  
       - name: Wait for CloudFront distribution update to complete
         run: |
-          counter=0
+          counter=10
           while true; do
             status=$(aws cloudfront get-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_REMOVE }} | jq -r '.Distribution.Status')
             if [ "$status" == "Deployed" ]; then
@@ -137,33 +137,11 @@ jobs:
 
       - name: Add CNAME to CloudFront
         run: |
-          # Step 1: Retrieve the current CloudFront distribution configuration
-          aws cloudfront get-distribution-config --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} > distribution-config.json
-          cat distribution-config.json
+           # Step 1: Retrieve the current CloudFront distribution configuration
+           aws cloudfront get-distribution-config --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} > distribution-config.json
 
-          # Step 2: Modify the configuration to add the CNAME
-          jq '.DistributionConfig.Aliases.Items = ["${{ env.DOMAIN_NAME }}"] | .DistributionConfig.Aliases.Quantity = 1' distribution-config.json > modified-config.json
+           # Step 2: Modify the configuration to add the CNAME
+           jq '.DistributionConfig.Aliases.Items = ["${{ env.DOMAIN_NAME }}"] | .DistributionConfig.Aliases.Quantity = 1 | .DistributionConfig' distribution-config.json > modified-config.json
 
-          # Step 3: Update the CloudFront distribution with the modified configuration in a loop
-          success=false
-          max_retries=60
-          counter=0
-          while [ $counter -lt $max_retries ]
-          do
-            if aws cloudfront update-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} --if-match $(jq -r '.ETag' distribution-config.json) --distribution-config file://modified-config.json; then
-              success=true
-              break
-            else
-              echo "Attempt $((counter+1)) to add CNAME failed. Retrying in 1 second..."
-              sleep 3
-              counter=$((counter+1))
-            fi
-          done
-
-          if [ "$success" == "false" ]; then
-            echo "Failed to add CNAME after $max_retries attempts"
-            exit 1
-          else
-            echo "CNAME added successfully"
-          fi
-
+           # Step 3: Update the CloudFront distribution with the modified configuration
+           aws cloudfront update-distribution --id ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID_CNAME_ADD }} --if-match $(jq -r '.ETag' distribution-config.json) --distribution-config file://modified-config.json
